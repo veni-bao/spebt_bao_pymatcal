@@ -18,8 +18,9 @@ def plot_ppdf_hdf5_cycle(configFname):
     np.min(config['det geoms'][:, 2])
     img_dims = config['img nvx']*config['mmpvx']
     for angidx in range(60):
+        print(angidx)
         config['angle']+=6
-        data_fname=common_fname+str(angidx+1)+'.hdf5'
+        data_fname=common_fname+str(int(angidx*6))+'.hdf5'
         with h5py.File(data_fname, 'r') as f:
             print('Keys: %s' % f.keys())
             data = f['test'][...]

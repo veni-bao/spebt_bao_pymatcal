@@ -89,7 +89,6 @@ def get_config(confName: str):
         active_dets = []
         for idx in indices:
             active_dets.append(geoms[geoms[:, 6] == idx][0])
-        print(active_dets)
         mydict["active indices"] = indices
         mydict["active dets"] = np.array(active_dets)
         mydict["det nsub"] = np.asarray(

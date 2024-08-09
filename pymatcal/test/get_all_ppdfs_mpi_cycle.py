@@ -5,7 +5,7 @@ import numpy as np
 import h5py
 from mpi4py import MPI
 import re
-
+import plot_ppdf_hdf5_cycle
 
 configFname = sys.argv[1]
 config = pymatcal.get_config(configFname)
@@ -22,9 +22,11 @@ procTaskIds = None
 procTaskIds = pymatcal.get_procIds(ntasks, nprocs)
 procTaskIds_recv = np.empty(2, dtype=np.uint32)
 comm.Scatter(procTaskIds, procTaskIds_recv, root=0)
+print("循环之前都可以")
 for angidx in range(60):
-    outFname = re.match('^(.+).yml',configFname).group(1)+str(angidx+1)+'.hdf5'
+    outFname = re.match('^(.+).yml',configFname).group(1)+str(int(angidx*6))+'.hdf5'
     config['angle']+=6
+    print(angidx)
     if rank == 0:
         print(f'{angidx}Configurations:')
         print('{:30s}{:,}'.format('N total tasks:', ntasks))
@@ -35,3 +37,6 @@ for angidx in range(60):
             dset[idmap[idx,1],idmap[idx,0]] = pymatcal.get_pair_ppdf(idmap[idx,0],idmap[idx,1],img_subdivs,config)
     # dset[idmap[idx,1],idmap[idx,0]] = 1
         f.close()
+
+print("all ppdfs generated")
+plot_ppdf_hdf5_cycle(configFname)
